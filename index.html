@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economic Events Countdown - Modern</title>
+    
+    <!-- GOOGLE FONTS - MÉTODO CORRETO -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --shadow-light: 0 8px 32px rgba(31, 38, 135, 0.37);
+            --shadow-heavy: 0 15px 35px rgba(31, 38, 135, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .main-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .countries-navigation {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        .nav-wrapper {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 8px;
+            box-shadow: var(--shadow-light);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            border-radius: 20px;
+            color: var(--text-primary);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 20px;
+        }
+
+        .nav-item span {
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-item:hover::before,
+        .nav-item.active::before {
+            opacity: 1;
+        }
+
+        .nav-item:hover span,
+        .nav-item.active span {
+            color: white;
+        }
+
+        .nav-item.active {
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .country-section {
+            display: none;
+            animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .country-section.active {
+            display: block;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .country-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .country-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .country-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .event-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+            transform-origin: left;
+        }
+
+        .event-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-heavy);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .event-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .event-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .event-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .event-priority {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .priority-high {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+        }
+
+        .priority-medium {
+            background: linear-gradient(135deg, #feca57, #ff9ff3);
+            color: white;
+        }
+
+        .priority-low {
+            background: linear-gradient(135deg, #48dbfb, #0abde3);
+            color: white;
+        }
+
+        .event-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .detail-item {
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+            color: var(--text-primary);
+        }
+
+        .countdown-container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .countdown-display {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .time-unit {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 16px 12px;
+            border-radius: 16px;
+            min-width: 70px;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .time-unit:hover {
+            transform: scale(1.05);
+        }
+
+        .time-value {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .time-label {
+            font-size: 0.7rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .expired {
+            background: var(--danger-gradient);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(255, 107, 107, 0.6);
+                transform: scale(1.02);
+            }
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0;
+            padding: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-item {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .event-header {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+            
+            .countdown-display {
+                gap: 8px;
+            }
+            
+            .time-unit {
+                min-width: 60px;
+                padding: 12px 8px;
+            }
+            
+            .stats-bar {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="main-title">Economic Intelligence</h1>
+            <p class="subtitle">Monitoramento em tempo real dos principais eventos econômicos mundiais</p>
+        </div>
+
+        <div class="countries-navigation">
+            <div class="nav-wrapper">
+                <button class="nav-item active" data-country="usa">
+                    <span>🇺🇸 Estados Unidos</span>
+                </button>
+                <button class="nav-item" data-country="uk">
+                    <span>🇬🇧 Reino Unido</span>
+                </button>
+                <button class="nav-item" data-country="japan">
+                    <span>🇯🇵 Japão</span>
+                </button>
+                <button class="nav-item" data-country="australia">
+                    <span>🇦🇺 Austrália</span>
+                </button>
+                <button class="nav-item" data-country="newzealand">
+                    <span>🇳🇿 Nova Zelândia</span>
+                </button>
+                <button class="nav-item" data-country="eurozone">
+                    <span>🇪🇺 Zona Euro</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="usa" class="country-section active">
+            <div class="country-header">
+                <h2 class="country-title">Estados Unidos</h2>
+                <p class="country-subtitle">Principais indicadores econômicos americanos</p>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="usa-count">0</div>
+                    <div class="stat-label">Eventos Ativos</div>
+                </div>
+            </div>
+            <div class="events-grid" id="usa-events"></div>
+        </div>
+
+        <div id="uk" class="country-section">
+            <div class="country-header">
+                <h2 class="country-title">Reino Unido</h2>
+                <p class="country-subtitle">Indicadores econômicos britânicos</p>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="uk-count">0</div>
+                    <div class="stat-label">Eventos Ativos</div>
+                </div>
+            </div>
+            <div class="events-grid" id="uk-events"></div>
+        </div>
+
+        <div id="japan" class="country-section">
+            <div class="country-header">
+                <h2 class="country-title">Japão</h2>
+                <p class="country-subtitle">Indicadores econômicos japoneses</p>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="japan-count">0</div>
+                    <div class="stat-label">Eventos Ativos</div>
+                </div>
+            </div>
+            <div class="events-grid" id="japan-events"></div>
+        </div>
+
+        <div id="australia" class="country-section">
+            <div class="country-header">
+                <h2 class="country-title">Austrália</h2>
+                <p class="country-subtitle">Indicadores econômicos australianos</p>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="australia-count">0</div>
+                    <div class="stat-label">Eventos Ativos</div>
+                </div>
+            </div>
+            <div class="events-grid" id="australia-events"></div>
+        </div>
+
+        <div id="newzealand" class="country-section">
+            <div class="country-header">
+                <h2 class="country-title">Nova Zelândia</h2>
+                <p class="country-subtitle">Indicadores econômicos neozelandeses</p>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="newzealand-count">0</div>
+                    <div class="stat-label">Eventos Ativos</div>
+                </div>
+            </div>
+            <div class="events-grid" id="newzealand-events"></div>
+        </div>
+
+        <div id="eurozone" class="country-section">
+            <div class="country-header">
+                <h2 class="country-title">Zona Euro</h2>
+                <p class="country-subtitle">Indicadores econômicos europeus</p>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="eurozone-count">0</div>
+                    <div class="stat-label">Eventos Ativos</div>
+                </div>
+            </div>
+            <div class="events-grid" id="eurozone-events"></div>
+        </div>
+    </div>
+
+    <script>
+        const economicEvents = {
+            // EUA - MANTÉM HORÁRIO ORIGINAL (correto)
+            usa: [
+                { title: "Non Farm Payroll", currency: "USD", index: "S&P 500", date: "2025-09-05T07:30:00-05:00", priority: "high" },
+                { title: "Core CPI", currency: "USD", index: "S&P 500", date: "2025-09-11T07:30:00-05:00", priority: "high" },
+                { title: "Core PPI", currency: "USD", index: "S&P 500", date: "2025-09-12T07:30:00-05:00", priority: "medium" },
+                { title: "Core Retail Sales", currency: "USD", index: "S&P 500", date: "2025-09-16T07:30:00-05:00", priority: "medium" }
+            ],
+            // REINO UNIDO - CORRIGIDO (+1 HORA)
+            uk: [
+                { title: "Labour Market", currency: "GBP", index: "FTSE 100", date: "2025-09-10T01:00:00-05:00", priority: "medium" },
+                { title: "CPI", currency: "GBP", index: "FTSE 100", date: "2025-09-17T01:00:00-05:00", priority: "high" },
+                { title: "PPI", currency: "GBP", index: "FTSE 100", date: "2025-09-17T01:00:00-05:00", priority: "low" },
+                { title: "Retail Sales", currency: "GBP", index: "FTSE 100", date: "2025-09-20T01:00:00-05:00", priority: "medium" },
+                { title: "BoE Interest Rate", currency: "GBP", index: "FTSE 100", date: "2025-09-18T06:00:00-05:00", priority: "high" },
+                { title: "GDP", currency: "GBP", index: "FTSE 100", date: "2025-10-11T01:00:00-05:00", priority: "high" }
+            ],
+            // JAPÃO - CORRIGIDO (+1 HORA)
+            japan: [
+                { title: "CPI", currency: "JPY", index: "Nikkei 225", date: "2025-08-21T18:30:00-05:00", priority: "high" },
+                { title: "Unemployment", currency: "JPY", index: "Nikkei 225", date: "2025-08-28T18:30:00-05:00", priority: "medium" },
+                { title: "Retail Sales", currency: "JPY", index: "Nikkei 225", date: "2025-08-28T18:30:00-05:00", priority: "low" },
+                { title: "GDP", currency: "JPY", index: "Nikkei 225", date: "2025-09-07T18:50:00-05:00", priority: "high" },
+                { title: "BoJ Interest Rate", currency: "JPY", index: "Nikkei 225", date: "2025-09-18T22:00:00-05:00", priority: "high" }
+            ],
+            // AUSTRÁLIA - CORRIGIDO (+1 HORA)
+            australia: [
+                { title: "CPI", currency: "AUD", index: "ASX 200", date: "2025-08-26T20:30:00-05:00", priority: "high" },
+                { title: "Employment", currency: "AUD", index: "ASX 200", date: "2025-09-17T20:30:00-05:00", priority: "medium" },
+                { title: "Retail Sales", currency: "AUD", index: "ASX 200", date: "2025-09-01T20:30:00-05:00", priority: "low" },
+                { title: "GDP", currency: "AUD", index: "ASX 200", date: "2025-09-02T20:30:00-05:00", priority: "high" },
+                { title: "RBA Interest Rate", currency: "AUD", index: "ASX 200", date: "2025-09-29T23:30:00-05:00", priority: "high" }
+            ],
+            // NOVA ZELÂNDIA - CORRIGIDO (+1 HORA)
+            newzealand: [
+                { title: "Retail Sales", currency: "NZD", index: "NZX 50", date: "2025-08-24T17:45:00-05:00", priority: "low" },
+                { title: "RBNZ Interest Rate", currency: "NZD", index: "NZX 50", date: "2025-08-19T21:00:00-05:00", priority: "high" },
+                { title: "CPI", currency: "NZD", index: "NZX 50", date: "2025-10-15T17:45:00-05:00", priority: "high" },
+                { title: "GDP", currency: "NZD", index: "NZX 50", date: "2025-09-18T17:45:00-05:00", priority: "high" },
+                { title: "Employment", currency: "NZD", index: "NZX 50", date: "2025-11-04T17:45:00-05:00", priority: "medium" }
+            ],
+            // ZONA EURO - CORRIGIDO (+1 HORA)
+            eurozone: [
+                { title: "HICP (CPI)", currency: "EUR", index: "Euro Stoxx 50", date: "2025-08-20T05:00:00-05:00", priority: "high" },
+                { title: "PPI", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-03T05:00:00-05:00", priority: "low" },
+                { title: "Retail Trade", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-06T05:00:00-05:00", priority: "medium" },
+                { title: "Unemployment", currency: "EUR", index: "Euro Stoxx 50", date: "2025-08-30T05:00:00-05:00", priority: "medium" },
+                { title: "GDP", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-06T05:00:00-05:00", priority: "high" },
+                { title: "ECB Interest Rate", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-25T08:15:00-05:00", priority: "high" }
+            ]
+        };
+
+        function updateCountdown(elementId, targetDate) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            const now = new Date();
+            const diffMs = targetDate - now;
+
+            if (diffMs <= 0) {
+                element.innerHTML = '<div class="expired">📊 Evento Finalizado</div>';
+                return false;
+            }
+
+            const totalSeconds = Math.floor(diffMs / 1000);
+            const days = Math.floor(totalSeconds / (3600 * 24));
+            const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            element.innerHTML = `
+                <div class="countdown-display">
+                    <div class="time-unit">
+                        <span class="time-value">${days}</span>
+                        <span class="time-label">Dias</span>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-value">${hours}</span>
+                        <span class="time-label">Horas</span>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-value">${minutes}</span>
+                        <span class="time-label">Min</span>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-value">${seconds}</span>
+                        <span class="time-label">Seg</span>
+                    </div>
+                </div>
+            `;
+            return true;
+        }
+
+        function renderCountry(country) {
+            const container = document.getElementById(`${country}-events`);
+            const events = economicEvents[country];
+            const countElement = document.getElementById(`${country}-count`);
+            
+            let html = '';
+            const countdownTimers = [];
+            let activeCount = 0;
+
+            events.forEach(event => {
+                const cardId = `countdown-${country}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                const eventDate = new Date(event.date);
+                const now = new Date();
+                
+                if (eventDate > now) {
+                    activeCount++;
+                }
+                
+                html += `
+                    <div class="event-card">
+                        <div class="event-header">
+                            <div class="event-title">${event.title}</div>
+                            <div class="event-priority priority-${event.priority}">
+                                ${event.priority}
+                            </div>
+                        </div>
+                        <div class="event-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Moeda</div>
+                                <div class="detail-value">${event.currency}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Índice</div>
+                                <div class="detail-value">${event.index}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Data</div>
+                                <div class="detail-value">${eventDate.toLocaleDateString('pt-BR')}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Hora</div>
+                                <div class="detail-value">${eventDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</div>
+                            </div>
+                        </div>
+                        <div class="countdown-container">
+                            <div id="${cardId}">Carregando...</div>
+                        </div>
+                    </div>
+                `;
+                
+                countdownTimers.push({ id: cardId, date: eventDate });
+            });
+
+            container.innerHTML = html;
+            countElement.textContent = activeCount;
+
+            // Start countdowns
+            countdownTimers.forEach(timer => {
+                updateCountdown(timer.id, timer.date);
+                setInterval(() => updateCountdown(timer.id, timer.date), 1000);
+            });
+        }
+
+        // Initialize all countries
+        Object.keys(economicEvents).forEach(country => {
+            renderCountry(country);
+        });
+
+        // Navigation functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove active class from all nav items and sections
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                document.querySelectorAll('.country-section').forEach(section => section.classList.remove('active'));
+                
+                // Add active class to clicked item and corresponding section
+                item.classList.add('active');
+                const country = item.getAttribute('data-country');
+                document.getElementById(country).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
