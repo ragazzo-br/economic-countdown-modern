@@ -4,13 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Economic Events Countdown - Modern</title>
-    
-    <!-- GOOGLE FONTS - MÉTODO CORRETO -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
@@ -33,7 +29,7 @@
         }
 
         body {
-            font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             color: var(--text-primary);
@@ -87,6 +83,7 @@
             line-height: 1.6;
         }
 
+        /* Desktop Navigation */
         .countries-navigation {
             display: flex;
             justify-content: center;
@@ -153,6 +150,110 @@
 
         .nav-item.active {
             box-shadow: var(--shadow-heavy);
+        }
+
+        /* Mobile Dropdown Navigation */
+        .mobile-navigation {
+            display: none;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 100;
+        }
+
+        .dropdown-container {
+            position: relative;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .dropdown-button {
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 16px 20px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-light);
+        }
+
+        .dropdown-button:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .dropdown-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-button.open .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            margin-top: 8px;
+            padding: 8px;
+            box-shadow: var(--shadow-heavy);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .dropdown-menu.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            max-height: 400px;
+        }
+
+        .dropdown-item {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 12px 16px;
+            text-align: left;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+        }
+
+        .dropdown-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
+        }
+
+        .dropdown-item.active {
+            background: var(--primary-gradient);
+            color: white;
         }
 
         .country-section {
@@ -298,7 +399,7 @@
 
         .detail-value {
             font-weight: 600;
-            font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+            font-family: 'JetBrains Mono', monospace;
             color: var(--text-primary);
         }
 
@@ -401,25 +502,51 @@
             margin-top: 4px;
         }
 
+        /* Media Queries */
         @media (max-width: 768px) {
-            .nav-wrapper {
-                flex-direction: column;
-                align-items: center;
+            .container {
+                padding: 20px 15px;
             }
             
-            .nav-item {
-                width: 100%;
-                text-align: center;
+            .header {
+                margin-bottom: 30px;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            /* Hide desktop navigation */
+            .countries-navigation {
+                display: none;
+            }
+            
+            /* Show mobile navigation */
+            .mobile-navigation {
+                display: block;
+            }
+            
+            .country-title {
+                font-size: 2rem;
             }
             
             .events-grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .event-card {
+                padding: 24px;
             }
             
             .event-header {
                 flex-direction: column;
                 gap: 12px;
                 text-align: center;
+            }
+            
+            .event-title {
+                font-size: 1.2rem;
             }
             
             .countdown-display {
@@ -431,8 +558,37 @@
                 padding: 12px 8px;
             }
             
+            .time-value {
+                font-size: 1.4rem;
+            }
+            
             .stats-bar {
                 gap: 20px;
+                margin: 20px 0;
+                padding: 20px;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .event-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .time-unit {
+                min-width: 50px;
+                padding: 10px 6px;
+            }
+            
+            .time-value {
+                font-size: 1.2rem;
+            }
+            
+            .time-label {
+                font-size: 0.6rem;
             }
         }
     </style>
@@ -444,6 +600,7 @@
             <p class="subtitle">Monitoramento em tempo real dos principais eventos econômicos mundiais</p>
         </div>
 
+        <!-- Desktop Navigation -->
         <div class="countries-navigation">
             <div class="nav-wrapper">
                 <button class="nav-item active" data-country="usa">
@@ -464,6 +621,24 @@
                 <button class="nav-item" data-country="eurozone">
                     <span>🇪🇺 Zona Euro</span>
                 </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div class="mobile-navigation">
+            <div class="dropdown-container">
+                <button class="dropdown-button" id="mobile-dropdown">
+                    <span class="selected-country">🇺🇸 Estados Unidos</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-menu" id="dropdown-menu">
+                    <button class="dropdown-item active" data-country="usa">🇺🇸 Estados Unidos</button>
+                    <button class="dropdown-item" data-country="uk">🇬🇧 Reino Unido</button>
+                    <button class="dropdown-item" data-country="japan">🇯🇵 Japão</button>
+                    <button class="dropdown-item" data-country="australia">🇦🇺 Austrália</button>
+                    <button class="dropdown-item" data-country="newzealand">🇳🇿 Nova Zelândia</button>
+                    <button class="dropdown-item" data-country="eurozone">🇪🇺 Zona Euro</button>
+                </div>
             </div>
         </div>
 
@@ -554,55 +729,58 @@
 
     <script>
         const economicEvents = {
-            // EUA - MANTÉM HORÁRIO ORIGINAL (correto)
             usa: [
                 { title: "Non Farm Payroll", currency: "USD", index: "S&P 500", date: "2025-09-05T07:30:00-05:00", priority: "high" },
                 { title: "Core CPI", currency: "USD", index: "S&P 500", date: "2025-09-11T07:30:00-05:00", priority: "high" },
                 { title: "Core PPI", currency: "USD", index: "S&P 500", date: "2025-09-12T07:30:00-05:00", priority: "medium" },
                 { title: "Core Retail Sales", currency: "USD", index: "S&P 500", date: "2025-09-16T07:30:00-05:00", priority: "medium" }
             ],
-            // REINO UNIDO - CORRIGIDO (+1 HORA)
             uk: [
-                { title: "Labour Market", currency: "GBP", index: "FTSE 100", date: "2025-09-10T01:00:00-05:00", priority: "medium" },
-                { title: "CPI", currency: "GBP", index: "FTSE 100", date: "2025-09-17T01:00:00-05:00", priority: "high" },
-                { title: "PPI", currency: "GBP", index: "FTSE 100", date: "2025-09-17T01:00:00-05:00", priority: "low" },
-                { title: "Retail Sales", currency: "GBP", index: "FTSE 100", date: "2025-09-20T01:00:00-05:00", priority: "medium" },
-                { title: "BoE Interest Rate", currency: "GBP", index: "FTSE 100", date: "2025-09-18T06:00:00-05:00", priority: "high" },
-                { title: "GDP", currency: "GBP", index: "FTSE 100", date: "2025-10-11T01:00:00-05:00", priority: "high" }
+                { title: "Labour Market", currency: "GBP", index: "FTSE 100", date: "2025-09-10T00:00:00-05:00", priority: "medium" },
+                { title: "CPI", currency: "GBP", index: "FTSE 100", date: "2025-09-17T00:00:00-05:00", priority: "high" },
+                { title: "PPI", currency: "GBP", index: "FTSE 100", date: "2025-09-17T00:00:00-05:00", priority: "low" },
+                { title: "Retail Sales", currency: "GBP", index: "FTSE 100", date: "2025-09-20T00:00:00-05:00", priority: "medium" },
+                { title: "BoE Interest Rate", currency: "GBP", index: "FTSE 100", date: "2025-09-18T05:00:00-05:00", priority: "high" },
+                { title: "GDP", currency: "GBP", index: "FTSE 100", date: "2025-10-11T00:00:00-05:00", priority: "high" }
             ],
-            // JAPÃO - CORRIGIDO (+1 HORA)
             japan: [
-                { title: "CPI", currency: "JPY", index: "Nikkei 225", date: "2025-08-21T18:30:00-05:00", priority: "high" },
-                { title: "Unemployment", currency: "JPY", index: "Nikkei 225", date: "2025-08-28T18:30:00-05:00", priority: "medium" },
-                { title: "Retail Sales", currency: "JPY", index: "Nikkei 225", date: "2025-08-28T18:30:00-05:00", priority: "low" },
-                { title: "GDP", currency: "JPY", index: "Nikkei 225", date: "2025-09-07T18:50:00-05:00", priority: "high" },
-                { title: "BoJ Interest Rate", currency: "JPY", index: "Nikkei 225", date: "2025-09-18T22:00:00-05:00", priority: "high" }
+                { title: "CPI", currency: "JPY", index: "Nikkei 225", date: "2025-08-21T17:30:00-05:00", priority: "high" },
+                { title: "Unemployment", currency: "JPY", index: "Nikkei 225", date: "2025-08-28T17:30:00-05:00", priority: "medium" },
+                { title: "Retail Sales", currency: "JPY", index: "Nikkei 225", date: "2025-08-28T17:30:00-05:00", priority: "low" },
+                { title: "GDP", currency: "JPY", index: "Nikkei 225", date: "2025-09-07T17:50:00-05:00", priority: "high" },
+                { title: "BoJ Interest Rate", currency: "JPY", index: "Nikkei 225", date: "2025-09-18T21:00:00-05:00", priority: "high" }
             ],
-            // AUSTRÁLIA - CORRIGIDO (+1 HORA)
             australia: [
-                { title: "CPI", currency: "AUD", index: "ASX 200", date: "2025-08-26T20:30:00-05:00", priority: "high" },
-                { title: "Employment", currency: "AUD", index: "ASX 200", date: "2025-09-17T20:30:00-05:00", priority: "medium" },
-                { title: "Retail Sales", currency: "AUD", index: "ASX 200", date: "2025-09-01T20:30:00-05:00", priority: "low" },
-                { title: "GDP", currency: "AUD", index: "ASX 200", date: "2025-09-02T20:30:00-05:00", priority: "high" },
-                { title: "RBA Interest Rate", currency: "AUD", index: "ASX 200", date: "2025-09-29T23:30:00-05:00", priority: "high" }
+                { title: "CPI", currency: "AUD", index: "ASX 200", date: "2025-08-26T19:30:00-05:00", priority: "high" },
+                { title: "Employment", currency: "AUD", index: "ASX 200", date: "2025-09-17T19:30:00-05:00", priority: "medium" },
+                { title: "Retail Sales", currency: "AUD", index: "ASX 200", date: "2025-09-01T19:30:00-05:00", priority: "low" },
+                { title: "GDP", currency: "AUD", index: "ASX 200", date: "2025-09-02T19:30:00-05:00", priority: "high" },
+                { title: "RBA Interest Rate", currency: "AUD", index: "ASX 200", date: "2025-09-29T22:30:00-05:00", priority: "high" }
             ],
-            // NOVA ZELÂNDIA - CORRIGIDO (+1 HORA)
             newzealand: [
-                { title: "Retail Sales", currency: "NZD", index: "NZX 50", date: "2025-08-24T17:45:00-05:00", priority: "low" },
-                { title: "RBNZ Interest Rate", currency: "NZD", index: "NZX 50", date: "2025-08-19T21:00:00-05:00", priority: "high" },
-                { title: "CPI", currency: "NZD", index: "NZX 50", date: "2025-10-15T17:45:00-05:00", priority: "high" },
-                { title: "GDP", currency: "NZD", index: "NZX 50", date: "2025-09-18T17:45:00-05:00", priority: "high" },
-                { title: "Employment", currency: "NZD", index: "NZX 50", date: "2025-11-04T17:45:00-05:00", priority: "medium" }
+                { title: "Retail Sales", currency: "NZD", index: "NZX 50", date: "2025-08-24T16:45:00-05:00", priority: "low" },
+                { title: "RBNZ Interest Rate", currency: "NZD", index: "NZX 50", date: "2025-08-19T20:00:00-05:00", priority: "high" },
+                { title: "CPI", currency: "NZD", index: "NZX 50", date: "2025-10-15T16:45:00-05:00", priority: "high" },
+                { title: "GDP", currency: "NZD", index: "NZX 50", date: "2025-09-18T16:45:00-05:00", priority: "high" },
+                { title: "Employment", currency: "NZD", index: "NZX 50", date: "2025-11-04T16:45:00-05:00", priority: "medium" }
             ],
-            // ZONA EURO - CORRIGIDO (+1 HORA)
             eurozone: [
-                { title: "HICP (CPI)", currency: "EUR", index: "Euro Stoxx 50", date: "2025-08-20T05:00:00-05:00", priority: "high" },
-                { title: "PPI", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-03T05:00:00-05:00", priority: "low" },
-                { title: "Retail Trade", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-06T05:00:00-05:00", priority: "medium" },
-                { title: "Unemployment", currency: "EUR", index: "Euro Stoxx 50", date: "2025-08-30T05:00:00-05:00", priority: "medium" },
-                { title: "GDP", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-06T05:00:00-05:00", priority: "high" },
-                { title: "ECB Interest Rate", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-25T08:15:00-05:00", priority: "high" }
+                { title: "HICP (CPI)", currency: "EUR", index: "Euro Stoxx 50", date: "2025-08-20T04:00:00-05:00", priority: "high" },
+                { title: "PPI", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-03T04:00:00-05:00", priority: "low" },
+                { title: "Retail Trade", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-06T04:00:00-05:00", priority: "medium" },
+                { title: "Unemployment", currency: "EUR", index: "Euro Stoxx 50", date: "2025-08-30T04:00:00-05:00", priority: "medium" },
+                { title: "GDP", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-06T04:00:00-05:00", priority: "high" },
+                { title: "ECB Interest Rate", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-25T07:15:00-05:00", priority: "high" }
             ]
+        };
+
+        const countryNames = {
+            usa: "🇺🇸 Estados Unidos",
+            uk: "🇬🇧 Reino Unido", 
+            japan: "🇯🇵 Japão",
+            australia: "🇦🇺 Austrália",
+            newzealand: "🇳🇿 Nova Zelândia",
+            eurozone: "🇪🇺 Zona Euro"
         };
 
         function updateCountdown(elementId, targetDate) {
@@ -709,24 +887,65 @@
             });
         }
 
+        function switchCountry(country) {
+            // Remove active class from all nav items and sections
+            document.querySelectorAll('.nav-item, .dropdown-item').forEach(nav => nav.classList.remove('active'));
+            document.querySelectorAll('.country-section').forEach(section => section.classList.remove('active'));
+            
+            // Add active class to clicked item and corresponding section
+            document.querySelector(`[data-country="${country}"]`).classList.add('active');
+            document.querySelectorAll(`[data-country="${country}"]`).forEach(item => item.classList.add('active'));
+            document.getElementById(country).classList.add('active');
+            
+            // Update mobile dropdown text
+            const selectedCountryElement = document.querySelector('.selected-country');
+            if (selectedCountryElement) {
+                selectedCountryElement.textContent = countryNames[country];
+            }
+        }
+
         // Initialize all countries
         Object.keys(economicEvents).forEach(country => {
             renderCountry(country);
         });
 
-        // Navigation functionality
+        // Desktop navigation functionality
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', () => {
-                // Remove active class from all nav items and sections
-                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-                document.querySelectorAll('.country-section').forEach(section => section.classList.remove('active'));
-                
-                // Add active class to clicked item and corresponding section
-                item.classList.add('active');
                 const country = item.getAttribute('data-country');
-                document.getElementById(country).classList.add('active');
+                switchCountry(country);
             });
         });
+
+        // Mobile dropdown functionality
+        const dropdownButton = document.getElementById('mobile-dropdown');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+
+        if (dropdownButton && dropdownMenu) {
+            dropdownButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownButton.classList.toggle('open');
+                dropdownMenu.classList.toggle('open');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', () => {
+                dropdownButton.classList.remove('open');
+                dropdownMenu.classList.remove('open');
+            });
+
+            // Dropdown item click handlers
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const country = item.getAttribute('data-country');
+                    switchCountry(country);
+                    
+                    // Close dropdown
+                    dropdownButton.classList.remove('open');
+                    dropdownMenu.classList.remove('open');
+                });
+            });
+        }
     </script>
 </body>
 </html>
