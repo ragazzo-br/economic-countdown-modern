@@ -618,6 +618,9 @@
                 <button class="nav-item" data-country="newzealand">
                     <span>🇳🇿 Nova Zelândia</span>
                 </button>
+                <button class="nav-item" data-country="canada">
+                    <span>🇨🇦 Canadá</span>
+                </button>
                 <button class="nav-item" data-country="eurozone">
                     <span>🇪🇺 Zona Euro</span>
                 </button>
@@ -637,6 +640,7 @@
                     <button class="dropdown-item" data-country="japan">🇯🇵 Japão</button>
                     <button class="dropdown-item" data-country="australia">🇦🇺 Austrália</button>
                     <button class="dropdown-item" data-country="newzealand">🇳🇿 Nova Zelândia</button>
+                    <button class="dropdown-item" data-country="canada">🇨🇦 Canadá</button>
                     <button class="dropdown-item" data-country="eurozone">🇪🇺 Zona Euro</button>
                 </div>
             </div>
@@ -712,6 +716,20 @@
             <div class="events-grid" id="newzealand-events"></div>
         </div>
 
+        <div id="canada" class="country-section">
+            <div class="country-header">
+                <h2 class="country-title">Canadá</h2>
+                <p class="country-subtitle">Indicadores econômicos canadenses</p>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="canada-count">0</div>
+                    <div class="stat-label">Eventos Ativos</div>
+                </div>
+            </div>
+            <div class="events-grid" id="canada-events"></div>
+        </div>
+
         <div id="eurozone" class="country-section">
             <div class="country-header">
                 <h2 class="country-title">Zona Euro</h2>
@@ -736,11 +754,8 @@
                 { title: "Core Retail Sales", currency: "USD", index: "S&P 500", date: "2025-09-16T07:30:00-05:00", priority: "medium" }
             ],
             uk: [
-                { title: "Labour Market", currency: "GBP", index: "FTSE 100", date: "2025-09-10T00:00:00-05:00", priority: "medium" },
-                { title: "CPI", currency: "GBP", index: "FTSE 100", date: "2025-09-17T00:00:00-05:00", priority: "high" },
-                { title: "PPI", currency: "GBP", index: "FTSE 100", date: "2025-09-17T00:00:00-05:00", priority: "low" },
-                { title: "Retail Sales", currency: "GBP", index: "FTSE 100", date: "2025-09-20T00:00:00-05:00", priority: "medium" },
                 { title: "BoE Interest Rate", currency: "GBP", index: "FTSE 100", date: "2025-09-18T05:00:00-05:00", priority: "high" },
+                { title: "CPI", currency: "GBP", index: "FTSE 100", date: "2025-09-17T00:00:00-05:00", priority: "high" },
                 { title: "GDP", currency: "GBP", index: "FTSE 100", date: "2025-10-11T00:00:00-05:00", priority: "high" }
             ],
             japan: [
@@ -758,18 +773,17 @@
                 { title: "RBA Interest Rate", currency: "AUD", index: "ASX 200", date: "2025-09-29T22:30:00-05:00", priority: "high" }
             ],
             newzealand: [
-                { title: "Retail Sales", currency: "NZD", index: "NZX 50", date: "2025-08-24T16:45:00-05:00", priority: "low" },
-                { title: "RBNZ Interest Rate", currency: "NZD", index: "NZX 50", date: "2025-08-19T20:00:00-05:00", priority: "high" },
-                { title: "CPI", currency: "NZD", index: "NZX 50", date: "2025-10-15T16:45:00-05:00", priority: "high" },
-                { title: "GDP", currency: "NZD", index: "NZX 50", date: "2025-09-18T16:45:00-05:00", priority: "high" },
-                { title: "Employment", currency: "NZD", index: "NZX 50", date: "2025-11-04T16:45:00-05:00", priority: "medium" }
+                { title: "RBNZ Interest Rate", currency: "NZD", index: "NZX 50", date: "2025-08-19T20:00:00-05:00", priority: "high" }
+            ],
+            canada: [
+                { title: "BoC Interest Rate", currency: "CAD", index: "TSX", date: "2025-09-03T09:00:00-05:00", priority: "high" },
+                { title: "CPI", currency: "CAD", index: "TSX", date: "2025-09-16T07:30:00-05:00", priority: "high" },
+                { title: "Employment", currency: "CAD", index: "TSX", date: "2025-09-05T07:30:00-05:00", priority: "high" },
+                { title: "GDP", currency: "CAD", index: "TSX", date: "2025-08-29T07:30:00-05:00", priority: "high" },
+                { title: "Core CPI", currency: "CAD", index: "TSX", date: "2025-09-16T07:30:00-05:00", priority: "medium" }
             ],
             eurozone: [
                 { title: "HICP (CPI)", currency: "EUR", index: "Euro Stoxx 50", date: "2025-08-20T04:00:00-05:00", priority: "high" },
-                { title: "PPI", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-03T04:00:00-05:00", priority: "low" },
-                { title: "Retail Trade", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-06T04:00:00-05:00", priority: "medium" },
-                { title: "Unemployment", currency: "EUR", index: "Euro Stoxx 50", date: "2025-08-30T04:00:00-05:00", priority: "medium" },
-                { title: "GDP", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-06T04:00:00-05:00", priority: "high" },
                 { title: "ECB Interest Rate", currency: "EUR", index: "Euro Stoxx 50", date: "2025-09-25T07:15:00-05:00", priority: "high" }
             ]
         };
@@ -780,6 +794,7 @@
             japan: "🇯🇵 Japão",
             australia: "🇦🇺 Austrália",
             newzealand: "🇳🇿 Nova Zelândia",
+            canada: "🇨🇦 Canadá",
             eurozone: "🇪🇺 Zona Euro"
         };
 
